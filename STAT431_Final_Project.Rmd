@@ -79,9 +79,3 @@ print(WAIC_values)
 cat("Number of parameters for WAIC: ", which.min(WAIC_values), "\n")
 ```
 
- <!-- 
- Include DIC and WAIC, WBIC, in simulations as well as any other allowed information selection criterion
- Include link to the code; add more references to papers
- Increase the degree of the polynomial to show the difference between AIC and BIC (difference is more apparent for higher degree polynomial models)
- -->
-
