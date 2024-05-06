@@ -10,6 +10,7 @@ output: pdf_document
 library(MASS)
 library(blmeco)
 
+# Generate random data to fit models with
 generate_data <- function(n, mean, sd, degree) {
   x <- rnorm(n, mean, sd)
   signs <- (-1)^(1:degree)
@@ -27,27 +28,29 @@ fit_polynomial_model <- function(data, degree) {
   return(model)
 }
 
-# Calculate BIC for a model
+# Calculates BIC for a model
 calculate_BIC <- function(model) {
   return(BIC(model))
 }
 
+# Calculates WBIC for a model
 calculate_WBIC <- function (model) {
   log_likelihood <- logLik(model)
   num_params <- length(coef(model))
   return (-2 * log_likelihood + 2 * num_params)
 }
 
-# Calculate AIC for a model
+# Calculates AIC for a model
 calculate_AIC <- function(model) {
   return(AIC(model))
 }
 
+# Calculates WAIC for a model
 calculate_WAIC <- function (model) {
   return (WAIC(model)$WAIC1)
 }
 
-# Generate Gaussian data
+# Generate data
 set.seed(123)
 data <- generate_data(1000, 0, 1, 15)
 
