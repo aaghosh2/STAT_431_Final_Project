@@ -1,0 +1,87 @@
+---
+title: "STAT 431 Final"
+author: "Akshay Ghosh"
+date: "2024-05-02"
+output: pdf_document
+---
+
+```{r}
+# Load necessary libraries  
+library(MASS)
+library(blmeco)
+
+generate_data <- function(n, mean, sd, degree) {
+  x <- rnorm(n, mean, sd)
+  signs <- (-1)^(1:degree)
+  coefficients <- signs * (degree:1)
+  y <- numeric(n)
+  for (i in 1:n) {
+    y[i] <- sum(coefficients * x[i]^(1:degree))
+  }
+  return(data.frame(x, y))
+}
+
+fit_polynomial_model <- function(data, degree) {
+  # Fit polynomial of specified degree
+  model <- lm(y ~ poly(x, degree), data = data)
+  return(model)
+}
+
+# Calculate BIC for a model
+calculate_BIC <- function(model) {
+  return(BIC(model))
+}
+
+calculate_WBIC <- function (model) {
+  log_likelihood <- logLik(model)
+  num_params <- length(coef(model))
+  return (-2 * log_likelihood + 2 * num_params)
+}
+
+# Calculate AIC for a model
+calculate_AIC <- function(model) {
+  return(AIC(model))
+}
+
+calculate_WAIC <- function (model) {
+  return (WAIC(model)$WAIC1)
+}
+
+# Generate Gaussian data
+set.seed(123)
+data <- generate_data(1000, 0, 1, 15)
+
+# Fit polynomial models of different degrees
+degrees <- 1:20
+models <- lapply(degrees, function(degree) fit_polynomial_model(data, degree))
+
+# Evaluate models using various model selection criteria
+BIC_values <- sapply(models, calculate_BIC)
+WBIC_values <- sapply(models, calculate_WBIC)
+AIC_values <- sapply(models, calculate_AIC)
+WAIC_values <- sapply(models, calculate_WAIC)
+
+# Display results
+print("BIC values:")
+print(BIC_values)
+cat("Number of parameters for BIC: ", which.min(BIC_values), "\n")
+
+print("WBIC values:")
+print(WBIC_values)
+cat("Number of parameters for WBIC: ", which.min(WBIC_values), "\n")
+
+print("AIC values:")
+print(AIC_values)
+cat("Number of parameters for AIC: ", which.min(AIC_values), "\n")
+
+print("WAIC values:")
+print(WAIC_values)
+cat("Number of parameters for WAIC: ", which.min(WAIC_values), "\n")
+```
+
+ <!-- 
+ Include DIC and WAIC, WBIC, in simulations as well as any other allowed information selection criterion
+ Include link to the code; add more references to papers
+ Increase the degree of the polynomial to show the difference between AIC and BIC (difference is more apparent for higher degree polynomial models)
+ -->
+
